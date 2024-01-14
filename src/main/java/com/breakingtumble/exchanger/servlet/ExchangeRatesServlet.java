@@ -7,6 +7,7 @@ import com.breakingtumble.exchanger.service.ExchangeRateService;
 import com.breakingtumble.exchanger.service.impl.CurrencyServiceImpl;
 import com.breakingtumble.exchanger.service.impl.ExchangeRateServiceImpl;
 import com.breakingtumble.exchanger.util.ErrorSender;
+import com.breakingtumble.exchanger.util.ExchangeRateDtoMapper;
 import com.breakingtumble.exchanger.util.JsonResponseSender;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 
 @WebServlet("/exchangeRates")
@@ -31,7 +34,7 @@ public class ExchangeRatesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            JsonResponseSender.sendJsonResponse(resp, exchangeRateService.getAllExchangeRates());
+            JsonResponseSender.sendJsonResponse(resp, ExchangeRateDtoMapper.mapListToDto(exchangeRateService.getAllExchangeRates()));
         } catch (SQLException e) {
             ErrorSender.sendErrorJSON(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error occurred: " + e.getMessage());
         }
@@ -42,7 +45,7 @@ public class ExchangeRatesServlet extends HttpServlet {
         String baseCurrencyCode = req.getParameter("baseCurrencyCode");
         String targetCurrencyCode = req.getParameter("targetCurrencyCode");
         String rate = req.getParameter("rate");
-        float rateConverted;
+        BigDecimal rateConverted;
         if (baseCurrencyCode == null || targetCurrencyCode == null || rate == null) {
             ErrorSender.sendErrorJSON(resp, HttpServletResponse.SC_BAD_REQUEST, "Some fields are absent, please, check the request body");
             return;
@@ -57,8 +60,7 @@ public class ExchangeRatesServlet extends HttpServlet {
             return;
         }
         try {
-            rateConverted = Float.parseFloat(rate);
-
+            rateConverted = new BigDecimal(rate).setScale(6, RoundingMode.DOWN);
             Currencyy base_currency = currencyService.getCurrencyByCode(baseCurrencyCode);
             if (base_currency == null) {
                 ErrorSender.sendErrorJSON(resp, HttpServletResponse.SC_NOT_FOUND, "Base currency wasn't found");
@@ -72,7 +74,7 @@ public class ExchangeRatesServlet extends HttpServlet {
             }
 
             ExchangeRate exchangeRate = new ExchangeRate(base_currency, target_currency, rateConverted);
-            JsonResponseSender.sendJsonResponse(resp, exchangeRateService.createExchangeRate(exchangeRate));
+            JsonResponseSender.sendJsonResponse(resp, ExchangeRateDtoMapper.mapToDto(exchangeRateService.createExchangeRate(exchangeRate)));
         } catch (SQLException | NumberFormatException e) {
             if (e instanceof NumberFormatException) {
                 ErrorSender.sendErrorJSON(resp, HttpServletResponse.SC_BAD_REQUEST, "Field 'rate' must be decimal number.");

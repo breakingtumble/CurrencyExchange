@@ -2,14 +2,16 @@ package com.breakingtumble.exchanger.dto;
 
 import com.breakingtumble.exchanger.model.Currencyy;
 
-public class ExchangeRateDTO {
+import java.math.BigDecimal;
+
+public class ExchangeRateResultDto {
     private Currencyy baseCurrency;
     private Currencyy targetCurrency;
-    private float rate;
-    private float amount;
-    private float convertedAmount;
+    private BigDecimal rate;
+    private BigDecimal amount;
+    private BigDecimal convertedAmount;
 
-    public ExchangeRateDTO(Currencyy baseCurrency, Currencyy targetCurrency, float rate, float amount, float convertedAmount) {
+    public ExchangeRateResultDto(Currencyy baseCurrency, Currencyy targetCurrency, BigDecimal rate, BigDecimal amount, BigDecimal convertedAmount) {
         this.baseCurrency = baseCurrency;
         this.targetCurrency = targetCurrency;
         this.rate = rate;
@@ -25,15 +27,15 @@ public class ExchangeRateDTO {
         return targetCurrency;
     }
 
-    public float getRate() {
+    public BigDecimal getRate() {
         return rate;
     }
 
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public float getConvertedAmount() {
+    public BigDecimal getConvertedAmount() {
         return convertedAmount;
     }
 }

@@ -1,21 +1,23 @@
-package com.breakingtumble.exchanger.model;
+package com.breakingtumble.exchanger.dto;
+
+import com.breakingtumble.exchanger.model.Currencyy;
 
 import java.math.BigDecimal;
 
-public class ExchangeRate {
+public class ExchangeRateDto {
     private int id;
     private Currencyy base;
     private Currencyy target;
     private BigDecimal rate;
 
-    public ExchangeRate(int id, Currencyy base, Currencyy target, BigDecimal rate) {
+    public ExchangeRateDto(int id, Currencyy base, Currencyy target, BigDecimal rate) {
         this.id = id;
         this.base = base;
         this.target = target;
         this.rate = rate;
     }
 
-    public ExchangeRate(Currencyy base, Currencyy target, BigDecimal rate) {
+    public ExchangeRateDto(Currencyy base, Currencyy target, BigDecimal rate) {
         this.base = base;
         this.target = target;
         this.rate = rate;
@@ -36,5 +38,4 @@ public class ExchangeRate {
     public Currencyy getTarget() {
         return target;
     }
-
 }

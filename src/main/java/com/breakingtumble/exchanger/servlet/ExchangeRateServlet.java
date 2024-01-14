@@ -4,6 +4,7 @@ import com.breakingtumble.exchanger.model.ExchangeRate;
 import com.breakingtumble.exchanger.service.ExchangeRateService;
 import com.breakingtumble.exchanger.service.impl.ExchangeRateServiceImpl;
 import com.breakingtumble.exchanger.util.ErrorSender;
+import com.breakingtumble.exchanger.util.ExchangeRateDtoMapper;
 import com.breakingtumble.exchanger.util.JsonResponseSender;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -57,7 +58,7 @@ public class ExchangeRateServlet extends HttpServlet {
                 ErrorSender.sendErrorJSON(resp, HttpServletResponse.SC_NOT_FOUND, "Can't find exchange rate.");
                 return;
             }
-            JsonResponseSender.sendJsonResponse(resp, exchangeRateService.findExchangeRateByCodes(baseCurrencyCode, targetCurrencyCode));
+            JsonResponseSender.sendJsonResponse(resp, ExchangeRateDtoMapper.mapToDto(exchangeRate));
         } catch (SQLException e) {
             ErrorSender.sendErrorJSON(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error occurred: " + e.getMessage());
         }
@@ -94,7 +95,7 @@ public class ExchangeRateServlet extends HttpServlet {
                 ErrorSender.sendErrorJSON(resp, HttpServletResponse.SC_NOT_FOUND, "Can't find specified exchange rate.");
                 return;
             }
-            JsonResponseSender.sendJsonResponse(resp, exchangeRateService.updateExchangeRate(exchangeRate, newRate));
+            JsonResponseSender.sendJsonResponse(resp, ExchangeRateDtoMapper.mapToDto(exchangeRateService.updateExchangeRate(exchangeRate, newRate)));
         } catch (SQLException | NumberFormatException e) {
             if (e instanceof NumberFormatException) {
                 ErrorSender.sendErrorJSON(resp, HttpServletResponse.SC_BAD_REQUEST, "Field 'rate' must be decimal number.");

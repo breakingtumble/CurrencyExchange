@@ -54,7 +54,7 @@ public class ExchangeRateDAOImpl implements ExchangeRateDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_RATE);
             preparedStatement.setInt(1, baseId);
             preparedStatement.setInt(2, targetId);
-            preparedStatement.setFloat(3, exchangeRate.getRate());
+            preparedStatement.setBigDecimal(3, exchangeRate.getRate());
             preparedStatement.executeUpdate();
             return findByBaseAndTargetCode(baseCode, targetCode);
         }

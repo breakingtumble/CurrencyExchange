@@ -62,7 +62,7 @@ public class ResultSetConverter {
                     resultSet.getInt("id"),
                     baseCurrency,
                     targetCurrency,
-                    resultSet.getFloat("rate")
+                    resultSet.getBigDecimal("rate")
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);

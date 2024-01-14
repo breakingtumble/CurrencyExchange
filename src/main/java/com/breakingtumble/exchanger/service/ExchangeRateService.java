@@ -1,6 +1,6 @@
 package com.breakingtumble.exchanger.service;
 
-import com.breakingtumble.exchanger.dto.ExchangeRateDTO;
+import com.breakingtumble.exchanger.dto.ExchangeRateResultDto;
 import com.breakingtumble.exchanger.model.ExchangeRate;
 
 import java.sql.SQLException;
@@ -15,5 +15,5 @@ public interface ExchangeRateService {
 
     ExchangeRate findExchangeRateByCodes(String base, String target) throws SQLException;
 
-    ExchangeRateDTO convertAmount(float amount, String baseCode, String targetCode) throws SQLException;
+    ExchangeRateResultDto convertAmount(float amount, String baseCode, String targetCode) throws SQLException;
 }
